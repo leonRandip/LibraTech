@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        body{
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background: rgba(172, 121, 216, 0.763);
+            background-size: cover;
+            background: radial-gradient(circle, rgba(177, 202, 49, 0.859) 0%, rgb(15, 213, 144) 100%);
+        }
+        .title{
+            background: rgba(73, 55, 90, 0.344);
+        }
+        h2{
+            text-align: center;
+            color: rgba(0, 0, 0, 0.853);
+        }
+        h3{
+            text-align: center;
+        }
+        h4{
+            text-align: center;
+        }
+        .container{
+            display: grid;
+            grid-template-columns: repeat(autofit,minmax(300px,1fr));
+            gap: 50px;
+            align-content: center;
+            margin-left: 50%;
+            transform: translate(-50%);
+            position: absolute;
+            border: 3px solid black;
+            border-radius: 20px;
+            padding: 5%;
+            width: 60%;
+            background: rgba(0, 0, 0, 0.353);
+        }
+        .column{
+            border: 2px solid black;
+            border-radius: 20px;
+            padding: 4%;
+        }
+        .container:hover{
+            background: rgba(0, 0, 0, 0.226);
+        }
+        .add{
+            padding-top: 20%;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+    <h2>Personal Book Library!</h2>
+    </div>
+    <div class="container">
+        <div class="column">
+        <h3>Add Books to Library</h3><hr>
+                    <p>Title:
+                    <input type="text" class="form-control" id="title"placeholder="Enter Book Name">
+                    </p>
+                    <p>Author:
+                    <input type="text" class="form-control" id="author" placeholder="Enter Author Name">
+                    </p>
+                    <p>PublishedYear:
+                    <input type="number" class="form-control" id="year" placeholder="Enter Year of Published">
+                    </p>
+                    <p>Status:
+                    <select name="status" class="form-control" id="status">
+                        <option value="Read">Read</option>
+                        <option value="Unread">Unread</option>
+                    </select>
+                    </p>
+                    <p><center><button type="button" class="btn btn-dark" onclick="addBookdetailsLast()">Add last</button>
+                        <button type="button" class="btn btn-dark" onclick="addBookdetailsfirst()">Add Front</button></center></p>
+        </div>
+        <div class="column">
+                <h3>Remove Books from Library</h3><hr>
+                <p><center><button type="button" onclick="removeFirstBook()" class="btn btn-danger">Remove First Book</button></p></center>
+                <p><center><button type="button" onclick="removeLastBook()" class="btn btn-danger">Remove Last Book</button></p></center>
+                <p><input type="text" class="form-control" id="rtitle" placeholder="Remove Book by Title"><button type="button" onclick="removeBookByTitle()" class="btn btn-danger">Remove Book</button></p>
+        </div>
+        <div class="column">
+                <h3>Get Book's Titles</h3><hr>
+                <center><p><button type="button" class="btn btn-info" onclick="getTitles()">Get All Titles</button></p></center>
+                <p><input type="text" class="form-control" id="gTitles" placeholder="Enter title of the Book"><button type="button" onclick="getBooksByTitle()" class="btn btn-dark">Get Books</button>
+                    <button type="button" onclick="toggleStatus()" class="btn btn-dark">Toggle Status</button>
+                </p>
+        </div>
+        <div class="column">
+                <h3>Get Books</h3><hr>
+                <p><input type="text" class="form-control" id="gauthor" placeholder="Enter Author's Name"><button type="button" onclick="getBooksByAuthor()" class="btn btn-dark">Get Books</button></p>
+                <p><input type="number" class="form-control" id="gtotalbyyear" placeholder="Enter year to get books before that year"><button type="button" onclick="getTotalBooksPublishedBefore()" class="btn btn-dark">Get Count</button></p>
+                <p><input type="text" class="form-control" id="gstatus" placeholder="Enter status of Book"><button type="button" onclick="getBooksByReadStatus()" class="btn btn-dark">Get Books</button></p>
+                <p><input type="number" class="form-control" id="gsublibfrom" placeholder="From"><input type="number" class="form-control" id="getsublibto" placeholder="To">
+                   <button type="button" onclick="getSubLibrary()" class="btn btn-dark">Get Book Set</button>
+                </p>
+                <center><p><button type="button" class="btn btn-info" onclick="summary()">Get Summary</button></p></center>
+        </div>
+    </div>
+    
+    <script>
+        function createBook(){
+            return{ title:"Crime and Punishment",
+            author:'Dostoevsky',
+            yearPublished:2003,
+            readStatus:'read',
+            getSummary:function(){
+                return "Title:"+this.title+" Author:"+this.author+" YearPublished:"+this.yearPublished+' ReadStatus:'+this.readStatus;
+            },
+            togglereadStatus:function(){
+            if(this.readStatus=='read'){
+                this.readStatus='unread';
+            }
+            else if(this.readStatus=='unread'){
+                this.readStatus='read';
+            }
+        }};
+        }
+      
+        function summary(){//over
+            let titles=library.map(e=>e.getSummary());
+            let str=JSON.stringify(titles)
+            alert(str);
+        }
+        function addBook(book){
+            library.push(book);
+        }
+        function removeLastBook(){//over
+            library.pop();
+            let str=JSON.stringify(library);
+            alert(str);
+        }
+        function addBookToFront(book){
+            library.unshift(book);
+        }
+        function removeFirstBook(){//over
+            library.shift();
+            let str=JSON.stringify(library);
+            alert(str);
+        }
+        function getTitles(){//over
+            let titles=library.map(e=>e.title);
+            let str=JSON.stringify(titles)
+            alert(str);
+        }
+        function getBooksByTitle(){//over
+            let titles=document.getElementById("gTitles").value;
+            let bytitle=library.filter(e=>e.title==titles);
+            let str=JSON.stringify(bytitle);
+            alert(str);
+        }
+        function toggleStatus(){//over
+            let tit=document.getElementById("gTitles").value;
+            library.filter(e=>{
+                if(e.title==tit){
+                e.togglereadStatus();
+            }});
+            alert("Successfully Toggled!!");
+        }
+        let library=Array();
+
+        let bookobj3=createBook();
+        bookobj3.title='Das Kapital';
+        bookobj3.author='Karl Marx';
+        bookobj3.yearPublished=2004;
+        bookobj3.readStatus='unread';
+        addBook(bookobj3);
+
+        let bookobj4=createBook();
+        bookobj4.title='Count of Monte Cristo';
+        bookobj4.author='VinayAlexander Dumasaga';
+        bookobj4.yearPublished=2010;
+        bookobj4.readStatus='unread';
+        addBook(bookobj4);
+        let bookobj5=createBook();
+        bookobj5.title='GBisarjanud';
+        bookobj5.author='R.N.Tagore';
+        bookobj5.yearPublished=1998;
+        bookobj5.readStatus='unread';
+        addBook(bookobj5);
+        let bookobj6=createBook();
+        bookobj6.title='Canterbury Tales';
+        bookobj6.author='Chaucer';
+        bookobj6.yearPublished=2005;
+        bookobj6.readStatus='unread';
+        addBook(bookobj6);
+        
+        function addBookdetailsfirst(){
+            let name = document.getElementById("title").value;
+            let auth = document.getElementById("author").value;
+            let year = document.getElementById("year").value;
+            let state = document.getElementById("status").value;
+            if(name!=""){
+                let tempbook=createBook();
+                tempbook.title=name;
+                tempbook.author=auth;
+                tempbook.yearPublished=year;
+                tempbook.readStatus=state;
+                addBookToFront(tempbook);
+            }
+            else{
+                console.log("Empty Input!!!");
+            }
+        }
+        function addBookdetailsLast(){
+            let name = document.getElementById("title").value;
+            let auth = document.getElementById("author").value;
+            let year = document.getElementById("year").value;
+            let state = document.getElementById("status").value;
+            if(name!=""){
+                let tempbook=createBook();
+                tempbook.title=name;
+                tempbook.author=auth;
+                tempbook.yearPublished=year;
+                tempbook.readStatus=state;
+                addBook(tempbook);
+            }
+            else{
+                console.log("Empty Input!!!");
+            }
+        }
+        function getBooksByAuthor(){//over
+            let authors=document.getElementById("gauthor").value;
+            let byauthor=library.filter(e=>e.author==authors);
+            let str=JSON.stringify(byauthor);
+            alert(str);
+        }
+        function getTotalBooksPublishedBefore(){//over
+            let year=document.getElementById("gtotalbyyear").value;
+            let count=library.filter(e=>e.yearPublished<year).reduce(e=>e+1,0);
+            alert(count);
+        }
+        function removeBookByTitle(){//over
+            let rTitle=document.getElementById("rtitle").value;
+            let index=library.findIndex(e=>e.title==rTitle);
+            library.splice(index,1);
+            let str=JSON.stringify(library);
+            alert(str);
+        }
+        function getBooksByReadStatus(){//over
+            let status=document.getElementById("gstatus").value;
+            let bookstatus=library.filter(e=>e.readStatus==status);
+            let str=JSON.stringify(bookstatus);
+            alert(str);
+        }
+        function getSubLibrary(){//over
+            let start=document.getElementById("gsublibfrom").value;
+            let end=document.getElementById("getsublibto").value;
+            let sublib=library.slice(start-1,end);
+            let str=JSON.stringify(sublib);
+            alert(str);
+        }
+      
+    </script>
+</body>
+</html>
